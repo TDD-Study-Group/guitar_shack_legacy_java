@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 
 class StockMonitorTest {
@@ -49,18 +51,16 @@ class StockMonitorTest {
     void explore() {
         Alert alert = Mockito.mock(Alert.class);
         HttpResponseProvider httpResponseProvider = Mockito.mock(HttpResponseProvider.class);
-        var product = new Product(1, 1, 3);
 
+        var product = new Product(1, 1, 3);
         Mockito.doReturn(gson.toJson(product)).when(httpResponseProvider).requestFrom(anyString());
 
-        var salesTotal = new SalesTotal();
-
-        Mockito.doReturn(gson.toJson(salesTotal)).when(httpResponseProvider).requestFrom(anyString());
+        String salesTotalString = "{\"productID\":1,\"startDate\":\"3/9/2021\",\"endDate\":\"4/8/2021\",\"total\":0}";
+        Mockito.doReturn(salesTotalString).when(httpResponseProvider).requestFrom(anyString());
 
         var stockMonitor = new StockMonitor(alert, httpResponseProvider);
-
         stockMonitor.productSold(1, 1);
-        verify(alert).send(product);
+        verify(alert).send(any());
     }
 
     /*

@@ -66,9 +66,7 @@ public class StockMonitor {
             paramString += key + "=" + params.get(key).toString() + "&";
         }
 
-
         String result = httpResponseProvider.requestFrom(baseURL + paramString);
-
 
         Product product = new Gson().fromJson(result, Product.class);
         return product;
