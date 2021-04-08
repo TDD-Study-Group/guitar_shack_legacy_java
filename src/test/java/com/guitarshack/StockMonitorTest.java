@@ -1,5 +1,6 @@
 package com.guitarshack;
 
+import com.google.gson.Gson;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -9,6 +10,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 
 class StockMonitorTest {
+    private final Gson gson = new Gson();
 
     @Test
     void productSold() {
@@ -47,8 +49,13 @@ class StockMonitorTest {
     void explore() {
         Alert alert = Mockito.mock(Alert.class);
         HttpResponseProvider httpResponseProvider = Mockito.mock(HttpResponseProvider.class);
-        Product product = new Product(1, 1, 3);
-        Mockito.doReturn(product).when(httpResponseProvider).requestFrom(anyString());
+        var product = new Product(1, 1, 3);
+
+        Mockito.doReturn(gson.toJson(product)).when(httpResponseProvider).requestFrom(anyString());
+
+        var salesTotal = new SalesTotal();
+
+        Mockito.doReturn(gson.toJson(salesTotal)).when(httpResponseProvider).requestFrom(anyString());
 
         var stockMonitor = new StockMonitor(alert, httpResponseProvider);
 

@@ -1,6 +1,6 @@
 package com.guitarshack;
 
-public class Product {
+public class  Product {
     private final int stock;
     private final int id;
     private final int leadTime;
