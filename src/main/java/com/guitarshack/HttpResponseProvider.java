@@ -11,14 +11,14 @@ public class HttpResponseProvider {
     }
 
     protected String requestFrom(String uriAsString) {
-        HttpRequest request1 = HttpRequest
+        HttpRequest request = HttpRequest
                 .newBuilder(URI.create(uriAsString))
                 .build();
         String result1 = "";
-        HttpClient httpClient1 = HttpClient.newHttpClient();
+        HttpClient httpClient = HttpClient.newHttpClient();
         HttpResponse<String> response1 = null;
         try {
-            response1 = httpClient1.send(request1, HttpResponse.BodyHandlers.ofString());
+            response1 = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             result1 = response1.body();
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();

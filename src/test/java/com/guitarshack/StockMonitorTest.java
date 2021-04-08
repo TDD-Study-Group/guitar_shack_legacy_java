@@ -63,6 +63,10 @@ class StockMonitorTest {
         verify(alert).send(any());
     }
 
+    @Test
+    void trigger() {
+    }
+
     /*
     curl "https://gjtvhjg8e9.execute-api.us-east-2.amazonaws
     .com/default/sales?productId=1&endDate=4/8/2021&action=total&startDate=3/9/2021&"
