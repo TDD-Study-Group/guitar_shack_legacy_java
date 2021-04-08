@@ -2,11 +2,6 @@ package com.guitarshack;
 
 import com.google.gson.Gson;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -16,9 +11,15 @@ import java.util.Map;
 
 public class StockMonitor {
     private final Alert alert;
+    private final HttpResponseProvider httpResponseProvider;
+
+    public StockMonitor(Alert alert, HttpResponseProvider httpResponseProvider) {
+        this.alert = alert;
+        this.httpResponseProvider = httpResponseProvider;
+    }
 
     public StockMonitor(Alert alert) {
-        this.alert = alert;
+        this(alert, new HttpResponseProvider());
     }
 
     public void productSold(int productId, int quantity) {
@@ -49,7 +50,7 @@ public class StockMonitor {
             paramString1 += key + "=" + params1.get(key).toString() + "&";
         }
         String uriAsString = "https://gjtvhjg8e9.execute-api.us-east-2.amazonaws.com/default/sales" + paramString1;
-        String result1 = requestFrom(uriAsString);
+        String result1 = httpResponseProvider.requestFrom(uriAsString);
         SalesTotal total = new Gson().fromJson(result1, SalesTotal.class);
         return total;
     }
@@ -66,7 +67,7 @@ public class StockMonitor {
         }
 
 
-        String result = requestFrom(baseURL + paramString);
+        String result = httpResponseProvider.requestFrom(baseURL + paramString);
 
 
         Product product = new Gson().fromJson(result, Product.class);
@@ -74,19 +75,7 @@ public class StockMonitor {
     }
 
     protected String requestFrom(String uriAsString) {
-        HttpRequest request1 = HttpRequest
-                .newBuilder(URI.create(uriAsString))
-                .build();
-        String result1 = "";
-        HttpClient httpClient1 = HttpClient.newHttpClient();
-        HttpResponse<String> response1 = null;
-        try {
-            response1 = httpClient1.send(request1, HttpResponse.BodyHandlers.ofString());
-            result1 = response1.body();
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        return result1;
+        return httpResponseProvider.requestFrom(uriAsString);
     }
 
 }

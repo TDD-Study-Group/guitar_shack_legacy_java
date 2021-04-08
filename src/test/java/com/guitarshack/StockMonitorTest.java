@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 
 class StockMonitorTest {
@@ -42,6 +43,18 @@ class StockMonitorTest {
         verify(alert).send(product);
     }
 
+    @Test
+    void explore() {
+        Alert alert = Mockito.mock(Alert.class);
+        HttpResponseProvider httpResponseProvider = Mockito.mock(HttpResponseProvider.class);
+        Product product = new Product(1, 1, 3);
+        Mockito.doReturn(product).when(httpResponseProvider).requestFrom(anyString());
+
+        var stockMonitor = new StockMonitor(alert, httpResponseProvider);
+
+        stockMonitor.productSold(1, 1);
+        verify(alert).send(product);
+    }
 
     /*
     curl "https://gjtvhjg8e9.execute-api.us-east-2.amazonaws
