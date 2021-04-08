@@ -23,6 +23,7 @@ public class StockMonitor {
 
     public void productSold(int productId, int quantity) {
         Product product = getProduct(productId);
+
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(Calendar.getInstance().getTime());
         Date endDate = calendar.getTime();
