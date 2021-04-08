@@ -27,8 +27,16 @@ public class StockMonitor {
 
         SalesTotal total = getSalesTotal(product);
 
-        if(product.getStock() - quantity <= (int) ((double) (total.getTotal() / 30) * product.getLeadTime())) // TODO: DEPENDENCY???
+        if(getRemainingStock(quantity, product) <= getLeadPressure(product, total)) // TODO: DEPENDENCY???
             alert.send(product);
+    }
+
+    protected int getLeadPressure(Product product, SalesTotal total) {
+        return (int) ((double) (total.getTotal() / 30) * product.getLeadTime());
+    }
+
+    protected int getRemainingStock(int quantity, Product product) {
+        return product.getStock() - quantity;
     }
 
     protected SalesTotal getSalesTotal(Product product) {

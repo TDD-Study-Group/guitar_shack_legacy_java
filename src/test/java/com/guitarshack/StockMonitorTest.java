@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 class StockMonitorTest {
     private final Gson gson = new Gson();
@@ -34,7 +34,7 @@ class StockMonitorTest {
 
     @Test
     void triggerAlertIfmock() {
-        Alert alert = Mockito.mock(Alert.class);
+        Alert alert = mock(Alert.class);
         Product product = new Product(1, 1, 3);
         var stockMonitor = new StockMonitor(alert) {
             @Override
@@ -49,14 +49,14 @@ class StockMonitorTest {
 
     @Test
     void triggerAlertWhenStockIsBelow30DaySell() {
-        Alert alert = Mockito.mock(Alert.class);
-        HttpResponseProvider httpResponseProvider = Mockito.mock(HttpResponseProvider.class);
+        Alert alert = mock(Alert.class);
+        HttpResponseProvider httpResponseProvider = mock(HttpResponseProvider.class);
 
         var product = new Product(1, 1, 3);
-        Mockito.doReturn(gson.toJson(product)).when(httpResponseProvider).requestFrom(anyString());
+        doReturn(gson.toJson(product)).when(httpResponseProvider).requestFrom(anyString());
 
         String salesTotalString = "{\"productID\":1,\"startDate\":\"3/9/2021\",\"endDate\":\"4/8/2021\",\"total\":0}";
-        Mockito.doReturn(salesTotalString).when(httpResponseProvider).requestFrom(anyString());
+        doReturn(salesTotalString).when(httpResponseProvider).requestFrom(anyString());
 
         var stockMonitor = new StockMonitor(alert, httpResponseProvider);
         stockMonitor.productSold(1, 1);
@@ -65,6 +65,28 @@ class StockMonitorTest {
 
     @Test
     void trigger() {
+        var alert = mock(Alert.class);
+        var httpResponseProvider = mock(HttpResponseProvider.class);
+
+        var product = new Product(1, 1, 3);
+        doReturn(gson.toJson(product)).when(httpResponseProvider).requestFrom(anyString());
+
+        var salesTotal = "{\"productID\":1,\"startDate\":\"3/9/2021\",\"endDate\":\"4/8/2021\",\"total\":0}";
+        doReturn(salesTotal).when(httpResponseProvider).requestFrom(anyString());
+
+        var stockMonitor = new StockMonitor(alert, httpResponseProvider){
+            @Override
+            protected int getLeadPressure(Product product, SalesTotal total) {
+                return 10;
+            }
+
+            @Override
+            protected int getRemainingStock(int quantity, Product product) {
+                return 20;
+            }
+        };
+        stockMonitor.productSold(1, 1);
+        verify(alert, never()).send(any());
     }
 
     /*
