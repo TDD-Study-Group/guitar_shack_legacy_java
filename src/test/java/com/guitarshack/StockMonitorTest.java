@@ -48,7 +48,7 @@ class StockMonitorTest {
     }
 
     @Test
-    void explore() {
+    void triggerAlertWhenStockIsBelow30DaySell() {
         Alert alert = Mockito.mock(Alert.class);
         HttpResponseProvider httpResponseProvider = Mockito.mock(HttpResponseProvider.class);
 

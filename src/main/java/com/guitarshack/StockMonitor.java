@@ -27,17 +27,17 @@ public class StockMonitor {
 
         SalesTotal total = getSalesTotal(product);
 
-        if(product.getStock() - quantity <= (int) ((double) (total.getTotal() / 30) * product.getLeadTime()))
+        if(product.getStock() - quantity <= (int) ((double) (total.getTotal() / 30) * product.getLeadTime())) // TODO: DEPENDENCY???
             alert.send(product);
     }
 
     protected SalesTotal getSalesTotal(Product product) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(Calendar.getInstance().getTime());
+        Calendar calendar = Calendar.getInstance(); // TODO: DEPENDENCY
+        calendar.setTime(Calendar.getInstance().getTime()); // TODO: DEPENDENCY
         Date endDate = calendar.getTime();
-        calendar.add(Calendar.DATE, -30);
+        calendar.add(Calendar.DATE, -30); // TODO: DEPENDENCY???
         Date startDate = calendar.getTime();
-        DateFormat format = new SimpleDateFormat("M/d/yyyy");
+        DateFormat format = new SimpleDateFormat("M/d/yyyy"); // TODO: DEPENDENCY
         Map<String, Object> params1 = new HashMap<>(){{
             put("productId", product.getId());
             put("startDate", format.format(startDate));
@@ -49,14 +49,14 @@ public class StockMonitor {
         for (String key : params1.keySet()) {
             paramString1 += key + "=" + params1.get(key).toString() + "&";
         }
-        String uriAsString = "https://gjtvhjg8e9.execute-api.us-east-2.amazonaws.com/default/sales" + paramString1;
+        String uriAsString = "https://gjtvhjg8e9.execute-api.us-east-2.amazonaws.com/default/sales" + paramString1; // TODO: DEPENDENCY
         String result1 = httpResponseProvider.requestFrom(uriAsString);
-        SalesTotal total = new Gson().fromJson(result1, SalesTotal.class);
+        SalesTotal total = new Gson().fromJson(result1, SalesTotal.class); // TODO: DEPENDENCY
         return total;
     }
 
     protected Product getProduct(int productId) {
-        String baseURL = "https://6hr1390c1j.execute-api.us-east-2.amazonaws.com/default/product";
+        String baseURL = "https://6hr1390c1j.execute-api.us-east-2.amazonaws.com/default/product"; // TODO: DEPENDENCY
         Map<String, Object> params = new HashMap<>() {{
             put("id", productId);
         }};
@@ -68,12 +68,8 @@ public class StockMonitor {
 
         String result = httpResponseProvider.requestFrom(baseURL + paramString);
 
-        Product product = new Gson().fromJson(result, Product.class);
+        Product product = new Gson().fromJson(result, Product.class); // TODO: DEPENDENCY
         return product;
-    }
-
-    protected String requestFrom(String uriAsString) {
-        return httpResponseProvider.requestFrom(uriAsString);
     }
 
 }
