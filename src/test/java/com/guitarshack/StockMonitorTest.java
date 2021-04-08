@@ -40,7 +40,6 @@ class StockMonitorTest {
         // ToDo: vary inputs, like 1,-5 0,1 2,10
         stockMonitor.productSold(1, 1);
         verify(alert).send(product);
-//        assertThrows(NullPointerException.class, () -> stockMonitor.productSold(1, 1));
     }
 
 
